@@ -1,0 +1,177 @@
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .all-\[unset\] {
+    all: unset;
+  }
+}
+
+:root {
+  --avatar-user-squareolivia-rhye-color-background: rgba(199, 185, 218, 1);
+  --black: rgba(36, 46, 44, 1);
+  --button-12px-semibold-font-family: "Urbanist", Helvetica;
+  --button-12px-semibold-font-size: 12px;
+  --button-12px-semibold-font-style: normal;
+  --button-12px-semibold-font-weight: 600;
+  --button-12px-semibold-letter-spacing: 0px;
+  --button-12px-semibold-line-height: 100%;
+  --button-14px-semibold-font-family: "Urbanist", Helvetica;
+  --button-14px-semibold-font-size: 14px;
+  --button-14px-semibold-font-style: normal;
+  --button-14px-semibold-font-weight: 600;
+  --button-14px-semibold-letter-spacing: 0px;
+  --button-14px-semibold-line-height: 100%;
+  --dark: rgba(10, 20, 47, 1);
+  --fintech-button-font-family: "Inter", Helvetica;
+  --fintech-button-font-size: 14px;
+  --fintech-button-font-style: normal;
+  --fintech-button-font-weight: 500;
+  --fintech-button-letter-spacing: 0px;
+  --fintech-button-line-height: 16.799999237060547px;
+  --gray-10: rgba(239, 240, 240, 1);
+  --gray-20: rgba(163, 163, 163, 1);
+  --gray-200: rgba(234, 236, 240, 1);
+  --gray-30: rgba(107, 114, 113, 1);
+  --gray-50: rgba(249, 250, 251, 1);
+  --gray-500: rgba(102, 112, 133, 1);
+  --gray-900: rgba(16, 24, 40, 1);
+  --gray-line: rgba(229, 230, 230, 1);
+  --green-bg: rgba(236, 244, 233, 1);
+  --green-dark: rgba(30, 72, 65, 1);
+  --green-light: rgba(187, 244, 156, 1);
+  --grey-30: rgba(229, 230, 230, 1);
+  --red: rgba(247, 53, 65, 1);
+  --text-sm-medium-font-family: "Inter", Helvetica;
+  --text-sm-medium-font-size: 14px;
+  --text-sm-medium-font-style: normal;
+  --text-sm-medium-font-weight: 500;
+  --text-sm-medium-letter-spacing: 0px;
+  --text-sm-medium-line-height: 20px;
+  --text-sm-regular-font-family: "Inter", Helvetica;
+  --text-sm-regular-font-size: 14px;
+  --text-sm-regular-font-style: normal;
+  --text-sm-regular-font-weight: 400;
+  --text-sm-regular-letter-spacing: 0px;
+  --text-sm-regular-line-height: 20px;
+  --text-xs-medium-font-family: "Inter", Helvetica;
+  --text-xs-medium-font-size: 12px;
+  --text-xs-medium-font-style: normal;
+  --text-xs-medium-font-weight: 500;
+  --text-xs-medium-letter-spacing: 0px;
+  --text-xs-medium-line-height: 18px;
+  --title-10px-semibold-font-family: "Urbanist", Helvetica;
+  --title-10px-semibold-font-size: 10px;
+  --title-10px-semibold-font-style: normal;
+  --title-10px-semibold-font-weight: 600;
+  --title-10px-semibold-letter-spacing: 0px;
+  --title-10px-semibold-line-height: 130%;
+  --title-11px-regular-font-family: "Urbanist", Helvetica;
+  --title-11px-regular-font-size: 11px;
+  --title-11px-regular-font-style: normal;
+  --title-11px-regular-font-weight: 400;
+  --title-11px-regular-letter-spacing: 0px;
+  --title-11px-regular-line-height: 124%;
+  --title-12px-regular-font-family: "Urbanist", Helvetica;
+  --title-12px-regular-font-size: 12px;
+  --title-12px-regular-font-style: normal;
+  --title-12px-regular-font-weight: 400;
+  --title-12px-regular-letter-spacing: 0px;
+  --title-12px-regular-line-height: 130%;
+  --title-12px-semibold-font-family: "Urbanist", Helvetica;
+  --title-12px-semibold-font-size: 12px;
+  --title-12px-semibold-font-style: normal;
+  --title-12px-semibold-font-weight: 600;
+  --title-12px-semibold-letter-spacing: 0px;
+  --title-12px-semibold-line-height: 130%;
+  --white: rgba(255, 255, 255, 1);
+  --xxsmall-regular-10px-urbanist-font-family: "Urbanist", Helvetica;
+  --xxsmall-regular-10px-urbanist-font-size: 10px;
+  --xxsmall-regular-10px-urbanist-font-style: normal;
+  --xxsmall-regular-10px-urbanist-font-weight: 400;
+  --xxsmall-regular-10px-urbanist-letter-spacing: 0px;
+  --xxsmall-regular-10px-urbanist-line-height: 130%;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: transparent;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: transparent;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}

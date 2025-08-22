@@ -1,0 +1,326 @@
+# Super Admin Dashboard - Cursor Rules
+
+## Project Overview
+This is a comprehensive Super Admin Dashboard for SureBanker platform built with React, TypeScript, and Tailwind CSS. The project emphasizes reusability, maintainability, and development speed.
+
+## Core Principles
+
+### 1. Reusability First
+- Create reusable components in `/src/components/ui/`
+- Extract common patterns into custom hooks in `/src/hooks/`
+- Use TypeScript interfaces for shared data structures
+- Implement composition over inheritance
+- Build generic, configurable components that can be used across different contexts
+
+### 2. Maintainability
+- Write self-documenting code with clear naming conventions
+- Keep components small and focused (Single Responsibility Principle)
+- Use consistent patterns throughout the codebase
+- Implement proper error boundaries and error handling
+- Maintain clean separation of concerns
+
+### 3. Development Speed
+- Leverage existing UI components before creating new ones
+- Use TypeScript for better IDE support and fewer runtime errors
+- Implement consistent patterns that can be quickly replicated
+- Prioritize working solutions over perfect abstractions initially
+
+## Code Structure Guidelines
+
+### File Organization
+```
+src/
+├── components/
+│   ├── ui/           # Reusable UI components
+│   └── layout/       # Layout-specific components
+├── screens/          # Page-level components
+├── hooks/            # Custom React hooks
+├── types/            # TypeScript type definitions
+├── utils/            # Utility functions
+└── lib/              # Third-party library configurations
+```
+
+### Component Guidelines
+
+#### Component Creation
+- Use functional components with TypeScript
+- Prefer named exports over default exports
+- Include proper TypeScript interfaces for props
+- Use composition pattern for flexibility
+
+```typescript
+// ✅ Good
+interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+}
+
+export const Button = ({ variant = 'primary', size = 'md', ...props }: ButtonProps) => {
+  // Implementation
+};
+
+// ❌ Avoid
+export default function Button(props: any) {
+  // Implementation
+}
+```
+
+#### Reusable Components
+- Create components that accept configuration through props
+- Use className prop for styling customization
+- Implement proper default values
+- Use compound component patterns where appropriate
+
+#### State Management
+- Use React hooks for local state
+- Prefer `useState` for simple state
+- Use `useReducer` for complex state logic
+- Extract stateful logic into custom hooks when reused
+
+### Styling Guidelines
+
+#### Tailwind CSS Best Practices
+- Use consistent color palette: `[#1E293B]`, `[#64748B]`, `[#5B52FF]`
+- Implement responsive design with mobile-first approach
+- Use utility classes over custom CSS
+- Group related classes logically
+
+```typescript
+// ✅ Good - Grouped by concern
+<div className="
+  flex items-center justify-between  // Layout
+  px-6 py-4                         // Spacing
+  bg-white border-b border-gray-200 // Appearance
+  hover:bg-gray-50                  // Interactions
+">
+```
+
+#### Component Styling
+- Use `className` prop for external styling customization
+- Implement conditional styling with `clsx` or similar utilities
+- Maintain consistent spacing and sizing patterns
+
+### TypeScript Guidelines
+
+#### Type Definitions
+- Define interfaces for all component props
+- Use strict TypeScript configuration
+- Prefer interfaces over types for object shapes
+- Create shared type definitions in `/src/types/`
+
+```typescript
+// ✅ Good
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: 'admin' | 'user' | 'superadmin';
+  status: 'active' | 'inactive' | 'suspended';
+}
+
+interface UserTableProps {
+  users: User[];
+  onUserSelect: (user: User) => void;
+  loading?: boolean;
+}
+```
+
+#### Error Handling
+- Use proper TypeScript error types
+- Implement error boundaries for component-level errors
+- Handle async operations with proper error states
+
+### Performance Guidelines
+
+#### Component Optimization
+- Use `React.memo()` for expensive re-renders
+- Implement `useMemo()` and `useCallback()` judiciously
+- Avoid creating objects/functions in render
+- Use proper dependency arrays in useEffect
+
+```typescript
+// ✅ Good
+const UserCard = React.memo(({ user, onEdit }: UserCardProps) => {
+  const handleEdit = useCallback(() => {
+    onEdit(user.id);
+  }, [user.id, onEdit]);
+
+  return (
+    // Component JSX
+  );
+});
+```
+
+#### Data Management
+- Implement proper loading states
+- Use pagination for large data sets
+- Implement optimistic updates where appropriate
+- Cache expensive computations
+
+### Testing Guidelines
+
+#### Component Testing
+- Write tests for complex business logic
+- Test user interactions and state changes
+- Mock external dependencies
+- Use React Testing Library patterns
+
+#### Type Safety
+- Leverage TypeScript compiler for catching errors
+- Use strict mode configuration
+- Implement proper prop validation
+
+### Naming Conventions
+
+#### Files and Directories
+- Use PascalCase for component files: `UserManagement.tsx`
+- Use camelCase for utility files: `apiHelpers.ts`
+- Use kebab-case for directories: `user-management/`
+
+#### Variables and Functions
+- Use camelCase for variables and functions
+- Use PascalCase for components and types
+- Use UPPER_CASE for constants
+- Use descriptive names that explain purpose
+
+```typescript
+// ✅ Good
+const handleUserStatusChange = (userId: string, status: UserStatus) => {};
+const USER_ROLES = ['admin', 'user', 'superadmin'] as const;
+interface UserManagementProps {}
+
+// ❌ Avoid
+const handleChange = (id: string, s: string) => {};
+const roles = ['admin', 'user', 'superadmin'];
+interface Props {}
+```
+
+### Data Flow Guidelines
+
+#### Props Drilling
+- Avoid deep props drilling (max 2-3 levels)
+- Use composition to avoid excessive prop passing
+- Consider context for widely-used data
+
+#### State Management
+- Keep state as local as possible
+- Lift state up only when necessary
+- Use reducer pattern for complex state logic
+
+### Common Patterns
+
+#### Modal Pattern
+```typescript
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}
+
+export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+  if (!isOpen) return null;
+  
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-[#1E293B]">{title}</h3>
+          <Button variant="ghost" onClick={onClose}>
+            <XIcon className="w-5 h-5" />
+          </Button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+```
+
+#### Table Pattern
+```typescript
+interface TableProps<T> {
+  data: T[];
+  columns: Column<T>[];
+  loading?: boolean;
+  onRowClick?: (item: T) => void;
+}
+
+export const Table = <T,>({ data, columns, loading, onRowClick }: TableProps<T>) => {
+  // Implementation
+};
+```
+
+#### Form Pattern
+```typescript
+interface FormFieldProps {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}
+
+export const FormField = ({ label, error, required, children }: FormFieldProps) => {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-[#1E293B] mb-2">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      {children}
+      {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+    </div>
+  );
+};
+```
+
+## Implementation Guidelines
+
+### Before Creating New Components
+1. Check if a similar component already exists
+2. Consider if existing components can be extended
+3. Evaluate if the component will be reused
+4. Plan the API (props interface) before implementation
+
+### Code Review Checklist
+- [ ] Component follows single responsibility principle
+- [ ] Props are properly typed with TypeScript interfaces
+- [ ] Component is reusable and configurable
+- [ ] Styling follows project conventions
+- [ ] No hardcoded values that should be configurable
+- [ ] Error handling is implemented where needed
+- [ ] Component is performant (no unnecessary re-renders)
+
+### Performance Optimization
+- Prefer CSS classes over inline styles
+- Use proper React optimization techniques
+- Implement proper loading states
+- Minimize bundle size by tree-shaking unused imports
+
+### Accessibility
+- Use semantic HTML elements
+- Implement proper ARIA attributes
+- Ensure keyboard navigation works
+- Maintain proper color contrast ratios
+
+## Anti-Patterns to Avoid
+
+### Component Anti-Patterns
+- ❌ Creating single-use components that could be generic
+- ❌ Passing too many props (consider composition)
+- ❌ Creating components that do too many things
+- ❌ Inline styles instead of Tailwind classes
+- ❌ Any type usage instead of proper TypeScript interfaces
+
+### Code Anti-Patterns
+- ❌ Copy-pasting code instead of creating reusable functions
+- ❌ Hardcoding values that should be configurable
+- ❌ Creating functions inside render methods
+- ❌ Not handling loading and error states
+- ❌ Inconsistent naming conventions
+
+Remember: The goal is to write code that is easy to understand, modify, and extend. Prioritize clarity and consistency over cleverness.

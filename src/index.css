@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Feedback system animations */
+@keyframes feedback-shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@layer utilities {
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Add custom styles for card flip animation */
+.card-flip {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-flip.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* Tour guide spotlight effect */
+.tour-spotlight {
+  position: absolute;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  z-index: 50;
+}
+
+/* KYC verification progress bar animation */
+.kyc-progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+/* Business promotion card slide animation */
+.promotion-slide {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.promotion-slide.sliding-out {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.promotion-slide.sliding-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Custom button shadows with matching colors */
+.btn-primary {
+  box-shadow: 0 8px 25px -8px rgba(91, 82, 255, 0.05);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 12px 35px -8px rgba(91, 82, 255, 0.08);
+}
+
+.btn-secondary {
+  box-shadow: 0 8px 25px -8px rgba(67, 64, 255, 0.05);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 12px 35px -8px rgba(67, 64, 255, 0.08);
+}
+
+.btn-success {
+  box-shadow: 0 8px 25px -8px rgba(34, 197, 94, 0.05);
+}
+
+.btn-success:hover {
+  box-shadow: 0 12px 35px -8px rgba(34, 197, 94, 0.08);
+}
+
+.btn-warning {
+  box-shadow: 0 8px 25px -8px rgba(245, 158, 11, 0.05);
+}
+
+.btn-warning:hover {
+  box-shadow: 0 12px 35px -8px rgba(245, 158, 11, 0.08);
+}
+
+.btn-danger {
+  box-shadow: 0 8px 25px -8px rgba(239, 68, 68, 0.05);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 12px 35px -8px rgba(239, 68, 68, 0.08);
+}
+
+.btn-orange {
+  box-shadow: 0 8px 25px -8px rgba(249, 115, 22, 0.05);
+}
+
+.btn-orange:hover {
+  box-shadow: 0 12px 35px -8px rgba(249, 115, 22, 0.08);
+}
+
+.btn-purple {
+  box-shadow: 0 8px 25px -8px rgba(147, 51, 234, 0.05);
+}
+
+.btn-purple:hover {
+  box-shadow: 0 12px 35px -8px rgba(147, 51, 234, 0.08);
+}
+
+.btn-yellow {
+  box-shadow: 0 8px 25px -8px rgba(234, 179, 8, 0.05);
+}
+
+.btn-yellow:hover {
+  box-shadow: 0 12px 35px -8px rgba(234, 179, 8, 0.08);
+}
+
+.btn-white {
+  box-shadow: 0 8px 25px -8px rgba(255, 255, 255, 0.05);
+}
+
+.btn-white:hover {
+  box-shadow: 0 12px 35px -8px rgba(255, 255, 255, 0.08);
+}
+
+.btn-black {
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-black:hover {
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.08);
+}
+
+/* Remove all card shadows */
+.card-no-shadow {
+  box-shadow: none !important;
+}
+
+/* Override default card shadows */
+.card, [class*="Card"] {
+  box-shadow: none !important;
+}
+
+/* Tour Guide Styles */
+.tour-highlight {
+  position: relative;
+  z-index: 51;
+  box-shadow: 0 0 0 4px rgba(91, 82, 255, 0.3);
+  border-radius: 8px;
+}
+
+.tour-arrow-top::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+.tour-arrow-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
+
+.tour-arrow-left::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid white;
+}
+
+.tour-arrow-right::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid white;
+}
