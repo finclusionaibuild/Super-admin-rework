@@ -1,5 +1,6 @@
 // POS API Service
 import { AUTH_CONFIG, handleAuthError } from '../config/auth';
+import { useAuthStore } from '../stores/authStore';
 
 interface ApiPosTerminal {
   id: number;
@@ -39,7 +40,15 @@ class PosApiService {
   }
 
   private getHeaders() {
-    return AUTH_CONFIG.getHeaders();
+    // Get token from Zustand store
+    const authStore = useAuthStore.getState();
+    const token = authStore.token || AUTH_CONFIG.authToken; // Fallback to hardcoded token
+
+    return {
+      'accept': 'text/plain',
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
   }
 
   async fetchPosTerminals(params: PosApiParams = {}): Promise<PosApiResponse> {
@@ -73,6 +82,7 @@ class PosApiService {
     } catch (error) {
       console.error('Error fetching POS terminals:', error);
       handleAuthError(error);
+      throw error; // Re-throw the error after handling
     }
   }
 
@@ -101,6 +111,7 @@ class PosApiService {
     } catch (error) {
       console.error('Error adding terminal:', error);
       handleAuthError(error);
+      throw error; // Re-throw the error after handling
     }
   }
 }

@@ -75,7 +75,8 @@ export const AddTerminalModal: React.FC<AddTerminalModalProps> = ({
                 <option value="">Select a business</option>
                 {businessCustomers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
-                    {customer.firstName} {customer.lastName} - {customer.finclusionId}
+                    {customer.name || `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Unknown Business'}
+                    {customer.rcNumber ? ` - RC: ${customer.rcNumber}` : ''}
                   </option>
                 ))}
               </select>
