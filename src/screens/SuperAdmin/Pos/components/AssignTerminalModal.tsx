@@ -1,27 +1,23 @@
 import React from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Card, CardContent } from '../../../../components/ui/card';
+import { SearchableDropdown } from '../../../../components/ui/searchable-dropdown';
 import { XIcon } from 'lucide-react';
 import { PosTerminal } from '../../../../types/pos';
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  type: string;
-  status: string;
-  region: string;
-}
+import { Customer } from '../../../../types/customer';
 
 interface AssignTerminalModalProps {
   isOpen: boolean;
   onClose: () => void;
   posTerminals: PosTerminal[];
-  users: User[];
+  businesses: Customer[];
+  businessesLoading?: boolean;
+  businessesError?: string | null;
+  searchBusinesses?: (query: string) => void;
   selectedTerminal: PosTerminal | null;
-  editingUser: User | null;
+  editingUser: Customer | null;
   onTerminalSelect: (terminal: PosTerminal | null) => void;
-  onUserSelect: (user: User | null) => void;
+  onUserSelect: (user: Customer | null) => void;
   onAssign: (terminalId: string, userId: string) => void;
 }
 
@@ -29,7 +25,10 @@ export const AssignTerminalModal: React.FC<AssignTerminalModalProps> = ({
   isOpen,
   onClose,
   posTerminals,
-  users,
+  businesses,
+  businessesLoading = false,
+  businessesError = null,
+  searchBusinesses,
   selectedTerminal,
   editingUser,
   onTerminalSelect,
@@ -38,13 +37,25 @@ export const AssignTerminalModal: React.FC<AssignTerminalModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const availableTerminals = posTerminals.filter(t => 
+  const availableTerminals = posTerminals.filter(t =>
     t.assignedUser === 'Unassigned' || t.status === 'Inactive'
   );
 
-  const availableUsers = users.filter(u => 
-    u.type === 'Business' && u.status === 'Active'
-  );
+  // Convert businesses to dropdown options format
+  const businessOptions = businesses.map(business => ({
+    id: business.id,
+    label: business.fullName,
+    sublabel: business.email || business.homeAddress || `RC: ${business.finclusionId}`,
+    region: business.region
+  }));
+
+  // Find selected business from the options
+  const selectedBusinessOption = editingUser ? {
+    id: editingUser.id,
+    label: editingUser.fullName,
+    sublabel: editingUser.email || editingUser.homeAddress || `RC: ${editingUser.finclusionId}`,
+    region: editingUser.region
+  } : null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -76,24 +87,21 @@ export const AssignTerminalModal: React.FC<AssignTerminalModalProps> = ({
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-[#1E293B] mb-2">Assign to User</label>
-            <select 
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-              onChange={(e) => {
-                const user = users.find(u => u.id === e.target.value) || null;
-                onUserSelect(user);
-              }}
-              value={editingUser?.id || ''}
-            >
-              <option value="">Choose user</option>
-              {availableUsers.map(user => (
-                <option key={user.id} value={user.id}>
-                  {user.firstName} {user.lastName} - {user.type} ({user.region})
-                </option>
-              ))}
-            </select>
-          </div>
+          <SearchableDropdown
+            label="Assign to Business"
+            options={businessOptions}
+            value={editingUser?.id || ''}
+            onChange={(businessId) => {
+              const business = businesses.find(b => b.id === businessId) || null;
+              onUserSelect(business);
+            }}
+            onSearch={searchBusinesses}
+            placeholder="Search and select business..."
+            searchPlaceholder="Search businesses by name, email, or region..."
+            loading={businessesLoading}
+            error={businessesError}
+            emptyMessage="No businesses found"
+          />
 
           {selectedTerminal && editingUser && (
             <Card className="bg-blue-50 border-blue-200">
@@ -105,8 +113,16 @@ export const AssignTerminalModal: React.FC<AssignTerminalModalProps> = ({
                     <span className="font-medium text-blue-900">{selectedTerminal.terminalId}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-blue-700">User:</span>
-                    <span className="font-medium text-blue-900">{editingUser.firstName} {editingUser.lastName}</span>
+                    <span className="text-blue-700">Business:</span>
+                    <span className="font-medium text-blue-900">{editingUser.fullName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-blue-700">Email:</span>
+                    <span className="font-medium text-blue-900">{editingUser.email}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-blue-700">Region:</span>
+                    <span className="font-medium text-blue-900">{editingUser.region}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-blue-700">Location:</span>

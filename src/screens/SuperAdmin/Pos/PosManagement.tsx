@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFeedback } from '../../../hooks/useFeedback';
 import { usePosTerminals } from '../../../hooks/usePosTerminals';
-import { useCustomers } from '../../../hooks/useCustomers';
+import { useAllBusinesses } from '../../../hooks/useCustomers';
 import { posApiService } from '../../../services/posApi';
 import { PosTerminal, NewTerminal, PosNotification } from '../../../types/pos';
 import {
@@ -36,22 +36,13 @@ export const PosManagement: React.FC = () => {
     refreshTerminals
   } = usePosTerminals();
   
-  // Business customers for terminal assignment
+  // Business customers for terminal assignment using the new hook
   const {
-    customers: allCustomers,
-    loading: customersLoading,
-    error: customersError,
-    selectedAccountType,
-    setSelectedAccountType
-  } = useCustomers();
-
-  // Set filter to business customers only and filter the results
-  useEffect(() => {
-    setSelectedAccountType('business');
-  }, [setSelectedAccountType]);
-
-  // Filter to get only business customers (additional client-side filter)
-  const businessCustomers = allCustomers.filter(customer => customer.accountType === 'business');
+    businesses,
+    loading: businessesLoading,
+    error: businessesError,
+    searchBusinesses
+  } = useAllBusinesses();
 
   // Local State
   const [users] = useState(mockUsers);
@@ -248,9 +239,10 @@ export const PosManagement: React.FC = () => {
         newTerminal={newTerminal}
         setNewTerminal={setNewTerminal}
         addingTerminal={addingTerminal}
-        businessCustomers={businessCustomers}
-        customersLoading={customersLoading}
-        customersError={customersError}
+        businessCustomers={businesses}
+        customersLoading={businessesLoading}
+        customersError={businessesError}
+        searchBusinesses={searchBusinesses}
         onSubmit={handleAddTerminal}
       />
 
@@ -258,7 +250,10 @@ export const PosManagement: React.FC = () => {
         isOpen={showAssignTerminalModal}
         onClose={() => setShowAssignTerminalModal(false)}
         posTerminals={posTerminals}
-        users={users}
+        businesses={businesses}
+        businessesLoading={businessesLoading}
+        businessesError={businessesError}
+        searchBusinesses={searchBusinesses}
         selectedTerminal={selectedTerminal}
         editingUser={editingUser}
         onTerminalSelect={setSelectedTerminal}

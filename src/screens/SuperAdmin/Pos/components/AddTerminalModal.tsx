@@ -1,8 +1,10 @@
 import React from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
+import { SearchableDropdown } from '../../../../components/ui/searchable-dropdown';
 import { XIcon, LoaderIcon } from 'lucide-react';
 import { NewTerminal } from '../../../../types/pos';
+import { Customer } from '../../../../types/customer';
 
 interface AddTerminalModalProps {
   isOpen: boolean;
@@ -10,9 +12,10 @@ interface AddTerminalModalProps {
   newTerminal: NewTerminal;
   setNewTerminal: (terminal: NewTerminal) => void;
   addingTerminal: boolean;
-  businessCustomers: any[];
+  businessCustomers: Customer[];
   customersLoading: boolean;
   customersError: string | null;
+  searchBusinesses?: (query: string) => void;
   onSubmit: () => void;
 }
 
@@ -25,6 +28,7 @@ export const AddTerminalModal: React.FC<AddTerminalModalProps> = ({
   businessCustomers,
   customersLoading,
   customersError,
+  searchBusinesses,
   onSubmit
 }) => {
   if (!isOpen) return null;
@@ -58,33 +62,24 @@ export const AddTerminalModal: React.FC<AddTerminalModalProps> = ({
               disabled={addingTerminal}
             />
           </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-[#1E293B] mb-2">Select Business *</label>
-            {customersLoading ? (
-              <div className="flex items-center justify-center py-4 border border-gray-300 rounded-lg">
-                <LoaderIcon className="w-5 h-5 animate-spin mr-2" />
-                <span className="text-[#64748B]">Loading businesses...</span>
-              </div>
-            ) : (
-              <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B52FF]"
-                value={newTerminal.businessId}
-                onChange={(e) => setNewTerminal({ ...newTerminal, businessId: e.target.value })}
-                disabled={addingTerminal}
-              >
-                <option value="">Select a business</option>
-                {businessCustomers.map((customer) => (
-                  <option key={customer.id} value={customer.id}>
-                    {customer.name || `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Unknown Business'}
-                    {customer.rcNumber ? ` - RC: ${customer.rcNumber}` : ''}
-                  </option>
-                ))}
-              </select>
-            )}
-            {customersError && (
-              <p className="text-sm text-red-600 mt-1">Error loading businesses: {customersError}</p>
-            )}
-          </div>
+          <SearchableDropdown
+            label="Business *"
+            options={businessCustomers.map(customer => ({
+              id: customer.id,
+              label: customer.fullName,
+              sublabel: customer.email || customer.homeAddress || `RC: ${customer.finclusionId}`,
+              region: customer.region
+            }))}
+            value={newTerminal.businessId}
+            onChange={(businessId) => setNewTerminal({ ...newTerminal, businessId })}
+            onSearch={searchBusinesses}
+            placeholder="Search and select business..."
+            searchPlaceholder="Search businesses by name, address, or RC number..."
+            loading={customersLoading}
+            error={customersError}
+            emptyMessage="No businesses found"
+            className="col-span-2"
+          />
           <div className="col-span-2">
             <label className="block text-sm font-medium text-[#1E293B] mb-2">Integrator Type *</label>
             <select

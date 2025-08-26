@@ -1,5 +1,5 @@
 // Customer Types
-export interface ApiCustomer {
+export interface ApiIndividualCustomer {
   id: string;
   finclusionId: string;
   phone: string;
@@ -15,6 +15,23 @@ export interface ApiCustomer {
   kycTierId: string | null;
   createdAt: string;
 }
+
+export interface ApiBusinessCustomer {
+  id: string;
+  name: string;
+  slug: string | null;
+  address: string | null;
+  tagName: string | null;
+  registrationType: string;
+  rcNumber: string | null;
+  city: string | null;
+  state: string | null;
+  businessSubCategoryId: string | null;
+  isPepStatus: boolean;
+  accountNo: string;
+}
+
+export type ApiCustomer = ApiIndividualCustomer | ApiBusinessCustomer;
 
 export interface Customer {
   id: string;

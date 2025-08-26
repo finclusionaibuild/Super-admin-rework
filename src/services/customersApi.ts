@@ -83,6 +83,39 @@ class CustomerApiService {
       throw error;
     }
   }
+
+  async fetchAllBusinesses(search?: string): Promise<CustomerApiResponse> {
+    const searchParams = new URLSearchParams();
+
+    // Set pagination for all businesses (large page size)
+    searchParams.append('page', '1');
+    searchParams.append('perPage', '1000'); // Large page to get all businesses
+    // searchParams.append('accountType', 'business'); // Only business customers
+
+    if (search) {
+      searchParams.append('search', search);
+    }
+
+    const url = `${this.baseUrl}/customers/all-businesses?${searchParams.toString()}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders()
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: CustomerApiResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching businesses:', error);
+      handleAuthError(error);
+      throw error;
+    }
+  }
 }
 
 export const customerApiService = new CustomerApiService();

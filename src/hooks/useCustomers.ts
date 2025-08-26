@@ -238,3 +238,116 @@ export const useCustomers = (): UseCustomersReturn => {
     refreshCustomers
   };
 };
+
+// Hook for fetching all businesses (for POS assignment)
+export const useAllBusinesses = (): {
+  businesses: Customer[];
+  loading: boolean;
+  error: string | null;
+  searchBusinesses: (query: string) => void;
+  refreshBusinesses: () => void;
+} => {
+  const [businesses, setBusinesses] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Use refs to track current state
+  const currentQueryRef = useRef('');
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
+
+  // Cancel any ongoing request
+  const cancelRequest = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+  }, []);
+
+  // Clear debounce timer
+  const clearDebounceTimer = useCallback(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
+  }, []);
+
+  const fetchBusinesses = useCallback(async (search?: string) => {
+    // Cancel any ongoing request
+    cancelRequest();
+
+    // Create new abort controller
+    abortControllerRef.current = new AbortController();
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await customerApiService.fetchAllBusinesses(search);
+
+      // Check if request was aborted
+      if (abortControllerRef.current?.signal.aborted) {
+        return;
+      }
+
+      if (response.statusCode === 200) {
+        const transformedBusinesses = transformApiCustomers(response.data.paginatedData);
+        setBusinesses(transformedBusinesses);
+      } else {
+        throw new Error(response.message || 'Failed to fetch businesses');
+      }
+    } catch (err) {
+      // Don't set error if request was aborted (component unmounted)
+      if (abortControllerRef.current?.signal.aborted) {
+        return;
+      }
+
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
+      console.error('Error fetching businesses:', err);
+    } finally {
+      if (!abortControllerRef.current?.signal.aborted) {
+        setLoading(false);
+      }
+    }
+  }, [cancelRequest]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cancelRequest();
+      clearDebounceTimer();
+    };
+  }, [cancelRequest, clearDebounceTimer]);
+
+  // Initial load
+  useEffect(() => {
+    fetchBusinesses();
+  }, []); // Only run once on mount
+
+  // Search with debounce
+  const searchBusinesses = useCallback((query: string) => {
+    setSearchQuery(query);
+    clearDebounceTimer();
+
+    debounceTimerRef.current = setTimeout(() => {
+      if (query !== currentQueryRef.current) {
+        currentQueryRef.current = query;
+        fetchBusinesses(query || undefined);
+      }
+    }, 300);
+  }, [fetchBusinesses, clearDebounceTimer]);
+
+  const refreshBusinesses = useCallback(() => {
+    fetchBusinesses(currentQueryRef.current || undefined);
+  }, [fetchBusinesses]);
+
+  return {
+    businesses,
+    loading,
+    error,
+    searchBusinesses,
+    refreshBusinesses
+  };
+};
