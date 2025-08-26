@@ -1,28 +1,26 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Customer, PaginationInfo, CustomerApiParams } from '../types/customer';
-import { customerApiService } from '../services/customersApi';
-import { transformApiCustomers } from '../utils/customerTransformers';
+import { Transaction, PaginationInfo } from '../types/transaction';
+import { transactionApiService, TransactionApiParams } from '../services/transactionApi';
+import { transformApiTransactions } from '../utils/transactionTransformers';
 
-interface UseCustomersReturn {
-  customers: Customer[];
+interface UseTransactionsReturn {
+  transactions: Transaction[];
   pagination: PaginationInfo;
   loading: boolean;
   error: string | null;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  selectedAccountType: string;
-  setSelectedAccountType: (type: string) => void;
   selectedStatus: string;
   setSelectedStatus: (status: string) => void;
   selectedRegion: string;
   setSelectedRegion: (region: string) => void;
   handlePageChange: (page: number) => void;
   handlePerPageChange: (perPage: number) => void;
-  refreshCustomers: () => void;
+  refreshTransactions: () => void;
 }
 
-export const useCustomers = (): UseCustomersReturn => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+export const useTransactions = (): UseTransactionsReturn => {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo>({
     currentPage: 1,
     perPage: 10,
@@ -32,7 +30,6 @@ export const useCustomers = (): UseCustomersReturn => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedAccountType, setSelectedAccountType] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedRegion, setSelectedRegion] = useState('all');
 
@@ -41,7 +38,6 @@ export const useCustomers = (): UseCustomersReturn => {
     page: 1,
     perPage: 10,
     search: '',
-    accountType: 'all',
     status: 'all'
   });
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -63,7 +59,7 @@ export const useCustomers = (): UseCustomersReturn => {
     }
   }, []);
 
-  const fetchCustomers = useCallback(async (params: CustomerApiParams = {}) => {
+  const fetchTransactions = useCallback(async (params: TransactionApiParams = {}) => {
     // Cancel any ongoing request
     cancelRequest();
 
@@ -78,12 +74,11 @@ export const useCustomers = (): UseCustomersReturn => {
         page: currentParamsRef.current.page,
         perPage: currentParamsRef.current.perPage,
         search: currentParamsRef.current.search || undefined,
-        accountType: currentParamsRef.current.accountType !== 'all' ? currentParamsRef.current.accountType : undefined,
         status: currentParamsRef.current.status !== 'all' ? currentParamsRef.current.status : undefined,
         ...params
       };
 
-      const response = await customerApiService.fetchCustomers({
+      const response = await transactionApiService.fetchTransactions({
         ...requestParams,
         signal: abortControllerRef.current?.signal
       });
@@ -94,8 +89,8 @@ export const useCustomers = (): UseCustomersReturn => {
       }
 
       if (response.statusCode === 200) {
-        const transformedCustomers = transformApiCustomers(response.data.paginatedData);
-        setCustomers(transformedCustomers);
+        const transformedTransactions = transformApiTransactions(response.data.paginatedData);
+        setTransactions(transformedTransactions);
 
         setPagination({
           currentPage: response.data.page,
@@ -104,7 +99,7 @@ export const useCustomers = (): UseCustomersReturn => {
           totalPages: response.data.totalPages
         });
       } else {
-        throw new Error(response.message || 'Failed to fetch customers');
+        throw new Error(response.message || 'Failed to fetch transactions');
       }
     } catch (err) {
       // Don't set error if request was aborted (component unmounted)
@@ -114,7 +109,7 @@ export const useCustomers = (): UseCustomersReturn => {
 
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(errorMessage);
-      console.error('Error fetching customers:', err);
+      console.error('Error fetching transactions:', err);
     } finally {
       if (!abortControllerRef.current?.signal.aborted) {
         setLoading(false);
@@ -136,10 +131,9 @@ export const useCustomers = (): UseCustomersReturn => {
       page: 1,
       perPage: 10,
       search: '',
-      accountType: 'all',
       status: 'all'
     };
-    fetchCustomers();
+    fetchTransactions();
   }, []); // Only run once on mount
 
   // Search with debounce
@@ -153,45 +147,24 @@ export const useCustomers = (): UseCustomersReturn => {
         page: 1 // Reset to first page when searching
       };
       currentParamsRef.current = newParams;
-      fetchCustomers();
+      fetchTransactions();
     }, 500);
 
     return () => clearDebounceTimer();
-  }, [searchQuery, fetchCustomers]);
+  }, [searchQuery, fetchTransactions]);
 
-  // Filter by account type with debounce
+  // Filter by status
   useEffect(() => {
     clearDebounceTimer();
 
-    debounceTimerRef.current = setTimeout(() => {
-      const newParams = {
-        ...currentParamsRef.current,
-        accountType: selectedAccountType,
-        page: 1 // Reset to first page when filtering
-      };
-      currentParamsRef.current = newParams;
-      fetchCustomers();
-    }, 300);
-
-    return () => clearDebounceTimer();
-  }, [selectedAccountType, fetchCustomers]);
-
-  // Filter by status with debounce
-  useEffect(() => {
-    clearDebounceTimer();
-
-    debounceTimerRef.current = setTimeout(() => {
-      const newParams = {
-        ...currentParamsRef.current,
-        status: selectedStatus,
-        page: 1 // Reset to first page when filtering
-      };
-      currentParamsRef.current = newParams;
-      fetchCustomers();
-    }, 300);
-
-    return () => clearDebounceTimer();
-  }, [selectedStatus, fetchCustomers]);
+    const newParams = {
+      ...currentParamsRef.current,
+      status: selectedStatus,
+      page: 1 // Reset to first page when filtering
+    };
+    currentParamsRef.current = newParams;
+    fetchTransactions();
+  }, [selectedStatus, fetchTransactions]);
 
   const handlePageChange = useCallback((page: number) => {
     currentParamsRef.current = {
@@ -199,8 +172,8 @@ export const useCustomers = (): UseCustomersReturn => {
       page
     };
     setPagination(prev => ({ ...prev, currentPage: page }));
-    fetchCustomers();
-  }, [fetchCustomers]);
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   const handlePerPageChange = useCallback((perPage: number) => {
     currentParamsRef.current = {
@@ -209,32 +182,30 @@ export const useCustomers = (): UseCustomersReturn => {
       page: 1
     };
     setPagination(prev => ({ ...prev, perPage, currentPage: 1 }));
-    fetchCustomers();
-  }, [fetchCustomers]);
+    fetchTransactions();
+  }, [fetchTransactions]);
 
-  const refreshCustomers = useCallback(() => {
+  const refreshTransactions = useCallback(() => {
     currentParamsRef.current = {
       ...currentParamsRef.current,
       page: 1
     };
-    fetchCustomers();
-  }, [fetchCustomers]);
+    fetchTransactions();
+  }, [fetchTransactions]);
 
   return {
-    customers,
+    transactions,
     pagination,
     loading,
     error,
     searchQuery,
     setSearchQuery,
-    selectedAccountType,
-    setSelectedAccountType,
     selectedStatus,
     setSelectedStatus,
     selectedRegion,
     setSelectedRegion,
     handlePageChange,
     handlePerPageChange,
-    refreshCustomers
+    refreshTransactions
   };
 };

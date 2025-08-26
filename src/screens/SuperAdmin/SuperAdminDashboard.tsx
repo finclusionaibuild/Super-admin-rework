@@ -5,6 +5,8 @@ import confetti from "canvas-confetti";
 import { ProfileDropdown } from "../../components/ui/profile-dropdown";
 import { useAuth } from "../../hooks/useAuth";
 import { PosManagement } from "./Pos";
+import { TransactionManagement } from "./Transaction";
+import { CustomerManagement } from "./User";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -551,237 +553,233 @@ export const SuperAdminDashboard = (): JSX.Element => {
     </div>
   );
 
-  const renderUsers = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#1E293B]">User Management</h2>
-          <p className="text-[#64748B]">Manage all platform users across all regions and types</p>
-        </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
-            <DownloadIcon className="w-4 h-4" />
-            Export Users
-          </Button>
-          <Button 
-            className="bg-[#5B52FF] text-white"
-            onClick={() => showSuccess("User Created", "New user account has been created successfully")}
-          >
-            <PlusIcon className="w-4 h-4 mr-2" />
-            Create User
-          </Button>
-        </div>
-      </div>
+  // renderUsers function has been replaced with CustomerManagement component
 
-      {/* User Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <UserIcon className="w-6 h-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">Individual</p>
-                <p className="text-2xl font-bold text-[#1E293B]">2.1M</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  // const renderAdminUsers = () => (
+  //   <div className="space-y-6">
+  //     <div className="flex items-center justify-between">
+  //       <div>
+  //         <h2 className="text-2xl font-bold text-[#1E293B]">Admin User Management</h2>
+  //         <p className="text-[#64748B]">Manage all admin users and their permissions</p>
+  //       </div>
+  //       <Button
+  //         className="bg-[#5B52FF] text-white"
+  //         onClick={() => showSuccess("Admin User Created", "New admin user has been created and onboarding email sent successfully")}
+  //       >
+  //         <PlusIcon className="w-4 h-4 mr-2" />
+  //         Create Admin User
+  //       </Button>
+  //     </div>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <BuildingIcon className="w-6 h-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">Business</p>
-                <p className="text-2xl font-bold text-[#1E293B]">350K</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  //     {/* Admin Statistics */}
+  //     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+  //               <CrownIcon className="w-6 h-6 text-purple-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">Super Admins</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">12</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <ShieldIcon className="w-6 h-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">Admin</p>
-                <p className="text-2xl font-bold text-[#1E293B]">247</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+  //               <BuildingIcon className="w-6 h-6 text-green-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">Business</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">350K</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <HeadphonesIcon className="w-6 h-6 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">Support</p>
-                <p className="text-2xl font-bold text-[#1E293B]">150</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+  //               <ShieldIcon className="w-6 h-6 text-purple-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">Admin</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">247</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <CodeIcon className="w-6 h-6 text-indigo-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">Developer</p>
-                <p className="text-2xl font-bold text-[#1E293B]">1.2K</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+  //               <HeadphonesIcon className="w-6 h-6 text-orange-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">Support</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">150</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-                <CrownIcon className="w-6 h-6 text-pink-600" />
-              </div>
-              <div>
-                <p className="text-sm text-[#64748B]">SuperAdmin</p>
-                <p className="text-2xl font-bold text-[#1E293B]">12</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+  //               <CodeIcon className="w-6 h-6 text-indigo-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">Developer</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">1.2K</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
 
-      {/* Users Table */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-[#1E293B]">All Users</h3>
-            <div className="flex gap-3">
-              <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
-                <Input
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64"
-                />
-              </div>
-              <select 
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                value={selectedUserType}
-                onChange={(e) => setSelectedUserType(e.target.value)}
-              >
-                <option value="all">All Types</option>
-                <option value="individual">Individual</option>
-                <option value="business">Business</option>
-                <option value="admin">Admin</option>
-                <option value="support">Support</option>
-                <option value="developer">Developer</option>
-                <option value="superadmin">SuperAdmin</option>
-              </select>
-              <select 
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                value={selectedRegion}
-                onChange={(e) => setSelectedRegion(e.target.value)}
-              >
-                <option value="all">All Regions</option>
-                <option value="nigeria">Nigeria</option>
-                <option value="ghana">Ghana</option>
-                <option value="kenya">Kenya</option>
-              </select>
-            </div>
-          </div>
+  //       <Card>
+  //         <CardContent className="p-6">
+  //           <div className="flex items-center gap-3">
+  //             <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+  //               <CrownIcon className="w-6 h-6 text-pink-600" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm text-[#64748B]">SuperAdmin</p>
+  //               <p className="text-2xl font-bold text-[#1E293B]">12</p>
+  //             </div>
+  //           </div>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">FIRST NAME</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">MIDDLE NAME</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">LAST NAME</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">EMAIL</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">PHONE</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">TYPE</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">STATUS</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">REGION</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">LAST LOGIN</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm font-medium text-[#1E293B]">{user.firstName}</td>
-                    <td className="py-3 px-4 text-sm text-[#64748B]">{user.middleName || '-'}</td>
-                    <td className="py-3 px-4 text-sm font-medium text-[#1E293B]">{user.lastName}</td>
-                    <td className="py-3 px-4 text-sm text-[#64748B]">{user.email}</td>
-                    <td className="py-3 px-4 text-sm text-[#64748B]">{user.phone}</td>
-                    <td className="py-3 px-4">
-                      <Badge className={
-                        user.type === "Individual" ? "bg-blue-100 text-blue-800" :
-                        user.type === "Business" ? "bg-green-100 text-green-800" :
-                        user.type === "Admin" ? "bg-purple-100 text-purple-800" :
-                        user.type === "Support" ? "bg-orange-100 text-orange-800" :
-                        user.type === "Developer" ? "bg-indigo-100 text-indigo-800" :
-                        "bg-pink-100 text-pink-800"
-                      }>
-                        {user.type}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Badge className={
-                        user.status === "Active" ? "bg-green-100 text-green-800" :
-                        user.status === "Frozen" ? "bg-yellow-100 text-yellow-800" :
-                        "bg-red-100 text-red-800"
-                      }>
-                        {user.status}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-[#64748B]">{user.region}</td>
-                    <td className="py-3 px-4 text-sm text-[#64748B]">{user.lastLogin}</td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => openUserDetails(user)}
-                        >
-                          <EyeIcon className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleUserStatusChange(user.id, 'freeze')}
-                        >
-                          <PauseIcon className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleUserStatusChange(user.id, 'deactivate')}
-                        >
-                          <XIcon className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  //     {/* Users Table */}
+  //     <Card>
+  //       <CardContent className="p-6">
+  //         <div className="flex items-center justify-between mb-6">
+  //           <h3 className="text-lg font-semibold text-[#1E293B]">All Users</h3>
+  //           <div className="flex gap-3">
+  //             <div className="relative">
+  //               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748B]" />
+  //               <Input
+  //                 placeholder="Search users..."
+  //                 value={searchQuery}
+  //                 onChange={(e) => setSearchQuery(e.target.value)}
+  //                 className="pl-10 w-64"
+  //               />
+  //             </div>
+  //             <select 
+  //               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+  //               value={selectedUserType}
+  //               onChange={(e) => setSelectedUserType(e.target.value)}
+  //             >
+  //               <option value="all">All Types</option>
+  //               <option value="individual">Individual</option>
+  //               <option value="business">Business</option>
+  //               <option value="admin">Admin</option>
+  //               <option value="support">Support</option>
+  //               <option value="developer">Developer</option>
+  //               <option value="superadmin">SuperAdmin</option>
+  //             </select>
+  //             <select 
+  //               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+  //               value={selectedRegion}
+  //               onChange={(e) => setSelectedRegion(e.target.value)}
+  //             >
+  //               <option value="all">All Regions</option>
+  //               <option value="nigeria">Nigeria</option>
+  //               <option value="ghana">Ghana</option>
+  //               <option value="kenya">Kenya</option>
+  //             </select>
+  //           </div>
+  //         </div>
+
+  //         <div className="overflow-x-auto">
+  //           <table className="w-full">
+  //             <thead>
+  //               <tr className="border-b border-gray-200">
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">FIRST NAME</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">MIDDLE NAME</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">LAST NAME</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">EMAIL</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">PHONE</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">TYPE</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">STATUS</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">REGION</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">LAST LOGIN</th>
+  //                 <th className="text-left py-3 px-4 text-sm font-medium text-[#64748B]">ACTIONS</th>
+  //               </tr>
+  //             </thead>
+  //             <tbody>
+  //               {filteredUsers.map((user) => (
+  //                 <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+  //                   <td className="py-3 px-4 text-sm font-medium text-[#1E293B]">{user.firstName}</td>
+  //                   <td className="py-3 px-4 text-sm text-[#64748B]">{user.middleName || '-'}</td>
+  //                   <td className="py-3 px-4 text-sm font-medium text-[#1E293B]">{user.lastName}</td>
+  //                   <td className="py-3 px-4 text-sm text-[#64748B]">{user.email}</td>
+  //                   <td className="py-3 px-4 text-sm text-[#64748B]">{user.phone}</td>
+  //                   <td className="py-3 px-4">
+  //                     <Badge className={
+  //                       user.type === "Individual" ? "bg-blue-100 text-blue-800" :
+  //                       user.type === "Business" ? "bg-green-100 text-green-800" :
+  //                       user.type === "Admin" ? "bg-purple-100 text-purple-800" :
+  //                       user.type === "Support" ? "bg-orange-100 text-orange-800" :
+  //                       user.type === "Developer" ? "bg-indigo-100 text-indigo-800" :
+  //                       "bg-pink-100 text-pink-800"
+  //                     }>
+  //                       {user.type}
+  //                     </Badge>
+  //                   </td>
+  //                   <td className="py-3 px-4">
+  //                     <Badge className={
+  //                       user.status === "Active" ? "bg-green-100 text-green-800" :
+  //                       user.status === "Frozen" ? "bg-yellow-100 text-yellow-800" :
+  //                       "bg-red-100 text-red-800"
+  //                     }>
+  //                       {user.status}
+  //                     </Badge>
+  //                   </td>
+  //                   <td className="py-3 px-4 text-sm text-[#64748B]">{user.region}</td>
+  //                   <td className="py-3 px-4 text-sm text-[#64748B]">{user.lastLogin}</td>
+  //                   <td className="py-3 px-4">
+  //                     <div className="flex gap-2">
+  //                       <Button 
+  //                         variant="ghost" 
+  //                         size="sm"
+  //                         onClick={() => openUserDetails(user)}
+  //                       >
+  //                         <EyeIcon className="w-4 h-4" />
+  //                       </Button>
+  //                       <Button 
+  //                         variant="ghost" 
+  //                         size="sm"
+  //                         onClick={() => handleUserStatusChange(user.id, 'freeze')}
+  //                       >
+  //                         <PauseIcon className="w-4 h-4" />
+  //                       </Button>
+  //                       <Button 
+  //                         variant="ghost" 
+  //                         size="sm"
+  //                         onClick={() => handleUserStatusChange(user.id, 'deactivate')}
+  //                       >
+  //                         <XIcon className="w-4 h-4" />
+  //                       </Button>
+  //                     </div>
+  //                   </td>
+  //                 </tr>
+  //               ))}
+  //             </tbody>
+  //           </table>
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   </div>
+  // );
 
   
 
@@ -1879,13 +1877,13 @@ export const SuperAdminDashboard = (): JSX.Element => {
       case "dashboard": return renderDashboard();
       case "admin-users": return renderAdminUsers();
       case "rbac": return renderRBAC();
-      case "users": return renderUsers();
+      case "users": return <CustomerManagement />;
       case "kyc": return renderKYC();
       case "kyb": return renderKYB();
       case "regional": return renderRegional();
       case "bulk-data": return renderBulkData();
       case "approval-workflow": return renderApprovalWorkflow();
-      case "transactions": return renderTransactions();
+      case "transactions": return <TransactionManagement />;
       case "cards": return renderCards();
       case "pos": return <PosManagement />;
       case "third-party": return renderThirdParty();

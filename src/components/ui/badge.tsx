@@ -28,6 +28,7 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
+  console.log({variant, className,props});
   return (
     <div className={cn(badgeVariants({ variant }), className)} {...props} />
   );

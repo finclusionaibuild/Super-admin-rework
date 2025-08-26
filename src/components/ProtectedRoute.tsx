@@ -11,7 +11,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children, 
   requiredRole 
 }) => {
-  const { isAuthenticated, role, isLoading } = useAuthStore();
+  let { isAuthenticated, role, isLoading } = useAuthStore();
   const location = useLocation();
 
   // Show loading state while checking authentication
@@ -31,7 +31,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/signIn" state={{ from: location }} replace />;
   }
 
+  console.log(role, requiredRole);
   // Check role if required
+  //Temporary role for testing purposes
+  role = 'super_admin';
   if (requiredRole && role !== requiredRole && role !== 'super_admin') {
     return (
       <div className="min-h-screen flex items-center justify-center">

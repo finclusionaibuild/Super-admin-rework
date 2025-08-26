@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFeedback } from '../../../hooks/useFeedback';
 import { usePosTerminals } from '../../../hooks/usePosTerminals';
-import { useBusinessCustomers } from '../../../hooks/useCustomers';
+import { useCustomers } from '../../../hooks/useCustomers';
 import { posApiService } from '../../../services/posApi';
 import { PosTerminal, NewTerminal, PosNotification } from '../../../types/pos';
 import {
@@ -38,13 +38,20 @@ export const PosManagement: React.FC = () => {
   
   // Business customers for terminal assignment
   const {
-    customers: businessCustomers,
+    customers: allCustomers,
     loading: customersLoading,
-    error: customersError
-  } = useBusinessCustomers({
-    initialParams: { perPage: 100 },
-    autoFetch: true
-  });
+    error: customersError,
+    selectedAccountType,
+    setSelectedAccountType
+  } = useCustomers();
+
+  // Set filter to business customers only and filter the results
+  useEffect(() => {
+    setSelectedAccountType('business');
+  }, [setSelectedAccountType]);
+
+  // Filter to get only business customers (additional client-side filter)
+  const businessCustomers = allCustomers.filter(customer => customer.accountType === 'business');
 
   // Local State
   const [users] = useState(mockUsers);

@@ -1,9 +1,54 @@
-// Customer API Service
+// Transaction API Service
 import { AUTH_CONFIG, handleAuthError } from '../config/auth';
 import { useAuthStore } from '../stores/authStore';
-import { CustomerApiResponse, CustomerApiParams } from '../types/customer';
 
-class CustomerApiService {
+export interface ApiTransaction {
+  transactionId: string;
+  category: string | null;
+  recipientAccountName: string | null;
+  recipientAccountNo: string | null;
+  recipientBank: string | null;
+  reference: string;
+  amount: number;
+  fee: number;
+  transactionTime: string;
+  description: string | null;
+  transactionType: string;
+  status: string;
+  createdAt: string;
+  senderName: string;
+  senderAccountNo: string;
+  senderBankCode: string;
+  recipientBankCode: string | null;
+  sessionId: string;
+}
+
+export interface TransactionApiResponse {
+  statusCode: number;
+  message: string;
+  data: {
+    paginatedData: ApiTransaction[];
+    totalCount: number;
+    page: number;
+    perPage: number;
+    totalPages: number;
+  };
+}
+
+export interface TransactionApiParams {
+  search?: string;
+  category?: string;
+  accountType?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  paymentMethod?: string;
+  page?: number;
+  perPage?: number;
+  signal?: AbortSignal; // For request cancellation
+}
+
+class TransactionApiService {
   private get baseUrl() {
     return AUTH_CONFIG.baseUrl;
   }
@@ -20,7 +65,7 @@ class CustomerApiService {
     };
   }
 
-  async fetchCustomers(params: CustomerApiParams = {}): Promise<CustomerApiResponse> {
+  async fetchTransactions(params: TransactionApiParams = {}): Promise<TransactionApiResponse> {
     const searchParams = new URLSearchParams();
 
     // Set default pagination
@@ -29,12 +74,14 @@ class CustomerApiService {
 
     // Add optional parameters
     if (params.search) searchParams.append('search', params.search);
+    if (params.category) searchParams.append('category', params.category);
     if (params.accountType) searchParams.append('accountType', params.accountType);
     if (params.startDate) searchParams.append('startDate', params.startDate);
     if (params.endDate) searchParams.append('endDate', params.endDate);
     if (params.status) searchParams.append('status', params.status);
+    if (params.paymentMethod) searchParams.append('paymentMethod', params.paymentMethod);
 
-    const url = `${this.baseUrl}/customers?${searchParams.toString()}`;
+    const url = `${this.baseUrl}/transactions?${searchParams.toString()}`;
 
     try {
       const response = await fetch(url, {
@@ -47,7 +94,7 @@ class CustomerApiService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: CustomerApiResponse = await response.json();
+      const data: TransactionApiResponse = await response.json();
       return data;
     } catch (error) {
       // Check if the error was due to request abortion
@@ -56,33 +103,11 @@ class CustomerApiService {
         throw error;
       }
 
-      console.error('Error fetching customers:', error);
+      console.error('Error fetching transactions:', error);
       handleAuthError(error);
       throw error; // Re-throw the error after handling
     }
   }
-
-  async fetchCustomerStats(): Promise<any> {
-    const url = `${this.baseUrl}/api/admin/customers/stats`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: this.getHeaders()
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching customer stats:', error);
-      handleAuthError(error);
-      throw error;
-    }
-  }
 }
 
-export const customerApiService = new CustomerApiService();
+export const transactionApiService = new TransactionApiService();
